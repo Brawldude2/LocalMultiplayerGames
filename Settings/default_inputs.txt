@@ -1,0 +1,14 @@
+F_Keyboard
+Player1:up g,down i,left u,right e,mono f
+Player2:up h,down l,left m,right y,mono j
+Player3:up a,down  ,left v,right c,mono c
+Player4:up k,down s,left z,right b,mono z
+Player5:up o,down s,left z,right b,mono b
+Player6:up d,down s,left z,right b,mono p
+---------------------------------------------
+Q_Keyboard
+Player1:up w,down s,left a,right d,mono_key q
+Player2:up o,down l,left k,right ş,mono_key p
+Player3:up f,down  ,left c,right v,mono_key c
+Player4:up j,down m,left n,right ö,mono_key ö
+---------------------------------------------
