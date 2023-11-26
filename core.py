@@ -17,7 +17,8 @@ FPS = 60
 BG_COLOR = (40,40,40)
 TITLE = "234 player games"
 WIDTH, HEIGHT = 1400,800
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+SCALE_FACTOR = 0.5
+screen = pygame.display.set_mode((WIDTH, HEIGHT),RESIZABLE)
 pygame.display.set_caption(TITLE)
 
 input_mask = load_input_mask("Q_Keyboard",6)
@@ -37,10 +38,11 @@ do = pymunk.pygame_util.DrawOptions(screen)
 start=now()
 # Game loop.
 while True:
+  SIZE = pygame.display.get_surface().get_size()
   pressed = pygame.key.get_pressed()
   inputs = extract_inputs(pressed)
   screen.fill(BG_COLOR)
-  game.run_frame(screen,inputs,(now()-start)*20,do=do)
+  game.run_frame(screen,inputs,(now()-start)*20,SIZE,do=do)
   start=now()
   pygame.display.flip()
 

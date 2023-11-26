@@ -3,11 +3,18 @@ import json
 import pygame
 from math import ceil
 
+import pymunk
+
 def projectile_on_hit(arbiter,space,data):
     s = arbiter.shapes
+    p = s[0].owner
+    if type(s[1]) is pymunk.Segment:
+        p.owner.remove_projectile(p)
+        return
     ct1,ct2 = s[0].collision_type,s[1].collision_type
-    p,hit = s[0].owner,s[1].owner
-    if ct1 == ct2 == 6 or hit is p.owner:return #Two projectiles colliding or colliding with shooter
+    hit = s[1].owner
+    if hit is p.owner:return #Hit the owner of the projectile
+    if ct1 == ct2 == 6 and not p.owner is hit.owner:return #Two projectiles colliding
     p.owner.remove_projectile(p)
     if hit.hit(): #Projectile hit a player
         p.owner.kill_counter += 1
@@ -84,6 +91,27 @@ class Loader:
         self.Game.DynamicObjects = DynamicObjects
         self.Game.StaticObjects = StaticObjects
 
+    def create_boundries(self): #TODO: Use function
+        shape = pymunk.Segment(self.Game.space.static_body, (1, 1), (1, 480), 1.0)
+        self.Game.space.add(shape)
+        shape.elasticity = 1
+        shape.friction = 1
+
+        shape = pymunk.Segment(self.Game.space.static_body, (640, 1), (640, 480), 1.0)
+        self.Game.space.add(shape)
+        shape.elasticity = 1
+        shape.friction = 1
+
+        shape = pymunk.Segment(self.Game.space.static_body, (1, 1), (640, 1), 1.0)
+        self.Game.space.add(shape)
+        shape.elasticity = 1
+        shape.friction = 1
+
+        shape = pymunk.Segment(self.Game.space.static_body, (1, 480), (640, 480), 1.0)
+        self.Game.space.add(shape)
+        shape.elasticity = 1
+        shape.friction = 1
+
     def load_file(self,map_file,map_name):
         with open(map_file,"r") as outfile:
             maps = json.load(outfile)
@@ -101,6 +129,7 @@ class Loader:
         self.load_background()
         self.load_map()
         self.load_handlers()
+        self.create_boundries()
 
     def load_handlers(self):
         self.Game.projectile_handler = self.Game.space.add_wildcard_collision_handler(6)

@@ -67,6 +67,9 @@ class Game():
         self.frame = 0
         self.player_count = player_count
         self.display = display
+        self.raw_display = pygame.Surface(display.get_size())
+        self.WIDTH = self.raw_display.get_width()
+        self.HEIGHT = self.raw_display.get_height()
 
         self.space = pymunk.Space()
         self.space.sleep_time_threshold = 1
@@ -81,24 +84,27 @@ class Game():
         #self.space.step(delta)
         for obj in self.DynamicObjects:
             obj.update()
-        
-    def render(self,display):
-        display.blit(self.background,(0,0))
+    def toScreen(self,display,SIZE):
+        display.blit(pygame.transform.scale(self.raw_display,SIZE),(0,0))
+    def render(self,display,SIZE):
+        self.raw_display.blit(self.background,(0,0))
         for obj in self.StaticObjects:
-            obj.render(display)
+            obj.render(self.raw_display)
         for obj in self.DynamicObjects:
-            obj.render(display)
+            obj.render(self.raw_display)
         for player in self.Players:
-            player.render(display)
+            player.render(self.raw_display)
         global selected
         if selected:
-            selected.render(display)
+            selected.render(self.raw_display)
         for o in self.editor.objects:
-            o.render(display)
+            o.render(self.raw_display)
+        self.toScreen(display,SIZE)
+
         
-    def run_frame(self,display,inputs,delta,do=None):
+    def run_frame(self,display,inputs,delta,SIZE,do=None):
         self.update(inputs,delta)
-        self.render(display)
+        self.render(display,SIZE)
         for _ in range(4):
             self.space.step(0.2)
         #self.space.step(delta)
