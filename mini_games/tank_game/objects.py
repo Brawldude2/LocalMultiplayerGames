@@ -24,8 +24,8 @@ class Projectile():
         self.shape.owner = self
         self.owner.Game.space.add(self.body,self.shape)
 
-    def update(self,delta=1):
-        self.pos = self.body.position + self.vel*delta
+    def update(self):
+        self.pos = self.body.position + self.vel
         self.body.position = self.pos[0],self.pos[1]
 
     def on_hit(self,arbiter,space,data):            
@@ -138,7 +138,7 @@ class Player(MapObject):
         self.blitRotate(display)
         for p in self.projectiles:
             p.blitRotate(display)
-    def run_update(self,inputs,delta):
+    def run_update(self,inputs):
         #self.body.activate()
         #print(self.body.is_sleeping,self.ID)
         u,d,l,r,mono = inputs[(self.ID-1)*5:self.ID*5] #Extract this player's input
@@ -156,10 +156,10 @@ class Player(MapObject):
             self.dir = (self.dir+self.dir_vel)%360
         self.body.position = self.pos[0],self.pos[1]
 
-    def update(self,inputs,delta):
+    def update(self,inputs):
         self.update_projectiles()
         if self.is_alive:
-            self.run_update(inputs,delta)
+            self.run_update(inputs)
         else:
             self.pos = self.body.position
             pass #Death code
@@ -196,7 +196,7 @@ class DynamicObject(MapObject):
         super().__init__(obj_data,Game)
         self.body.angle = self.dir*(1/57.29)
 
-    def update(self,delta=0):
+    def update(self):
         self.pos = self.body.position
         self.dir = -self.body.angle*57.29
 

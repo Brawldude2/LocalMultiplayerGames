@@ -78,14 +78,16 @@ class Game():
 
         self.editor = MapEditor(self)
         
-    def update(self,inputs,delta):
+    def update(self,inputs):
         for player in self.Players:
-            player.update(inputs,delta)
+            player.update(inputs)
         #self.space.step(delta)
         for obj in self.DynamicObjects:
             obj.update()
+
     def toScreen(self,display,SIZE):
         display.blit(pygame.transform.scale(self.raw_display,SIZE),(0,0))
+
     def render(self,display,SIZE):
         self.raw_display.blit(self.background,(0,0))
         for obj in self.StaticObjects:
@@ -101,14 +103,11 @@ class Game():
             o.render(self.raw_display)
         self.toScreen(display,SIZE)
 
-        
-    def run_frame(self,display,inputs,delta,SIZE,do=None):
-        self.update(inputs,delta)
+    def RunFrame(self,display,inputs,SIZE):
+        self.update(inputs)
         self.render(display,SIZE)
         for _ in range(4):
             self.space.step(0.2)
-        #self.space.step(delta)
-        #self.space.debug_draw(do) #EMERGENCY DEBUG
         self.frame+=1
 
     def Load(self,map_filename,map_name):

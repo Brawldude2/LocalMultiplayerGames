@@ -8,54 +8,63 @@ sys.path.append("./mini_games")
 from minigame_manager import get_minigame
 from load_settings import load_input_mask
 
+class App:
+  def __init__(self):
+    pygame.init()
+    self.fpsClock = pygame.time.Clock()
 
-pygame.init()
-fpsClock = pygame.time.Clock()
+    # Globals
+    self.FPS = 60
+    self.BG_COLOR = (40,40,40)
+    self.TITLE = "234 player games"
+    self.WIDTH, self.HEIGHT = 1400,800
+    self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT),RESIZABLE)
+    self.frame = 0
+    self.running = True
+    self.inputs = None
+    pygame.display.set_caption(self.TITLE)
+    self.input_mask = load_input_mask("Q_Keyboard",6)
+    self.tank_game = get_minigame(1,2,"assets/maps.json","desert1",self.screen)
 
-# Globals
-FPS = 60
-BG_COLOR = (40,40,40)
-TITLE = "234 player games"
-WIDTH, HEIGHT = 1400,800
-SCALE_FACTOR = 0.5
-screen = pygame.display.set_mode((WIDTH, HEIGHT),RESIZABLE)
-pygame.display.set_caption(TITLE)
+  def extract_inputs(self,pressed):
+    input_list = []
+    for key in self.input_mask:
+      input_list.append(pressed[key])
+    self.inputs = tuple(input_list)
 
-input_mask = load_input_mask("Q_Keyboard",6)
+  def HandleInputs(self):
+    pressed = pygame.key.get_pressed()
+    self.extract_inputs(pressed)
 
-game = get_minigame(1,2,"assets/maps.json","desert1",screen)
+  def RenderFrame(self):
+    SIZE = pygame.display.get_surface().get_size()
+    self.screen.fill(self.BG_COLOR)
+    self.tank_game.RunFrame(self.screen,self.inputs,SIZE)
+    pygame.display.flip()
+    
+  def HandleEvents(self):
+    for event in pygame.event.get():
+      if event.type == QUIT:
+        pygame.quit()
+        sys.exit()
+      if event.type == "No":
+        if event.key == K_a:
+          self.tank_game.editor.place_object(pygame.mouse.get_pos())
+        if event.key == K_f:
+          self.tank_game.editor.release()
+        if event.key == K_r:
+          self.tank_game.editor.rotate(45)
 
-def extract_inputs(pressed):
-  input_list = []
-  for key in input_mask:
-    input_list.append(pressed[key])
-  return tuple(input_list)
+  def Run(self):
+    # Game loop.
+    while self.running:
+      self.HandleInputs()
+      self.RenderFrame()
+      self.HandleEvents()
+      #self.tank_game.editor.update(pygame.mouse.get_pos())
+      self.fpsClock.tick(self.FPS)
+      self.frame+=1
 
-#DEBUG
-import pymunk
-do = pymunk.pygame_util.DrawOptions(screen) 
-
-start=now()
-# Game loop.
-while True:
-  SIZE = pygame.display.get_surface().get_size()
-  pressed = pygame.key.get_pressed()
-  inputs = extract_inputs(pressed)
-  screen.fill(BG_COLOR)
-  game.run_frame(screen,inputs,(now()-start)*20,SIZE,do=do)
-  start=now()
-  pygame.display.flip()
-
-  for event in pygame.event.get():
-    if event.type == QUIT:
-      pygame.quit()
-      sys.exit()
-    if event.type == "No":
-      if event.key == K_a:
-        game.editor.place_object(pygame.mouse.get_pos())
-      if event.key == K_f:
-        game.editor.release()
-      if event.key == K_r:
-        game.editor.rotate(45)
-  game.editor.update(pygame.mouse.get_pos())
-  fpsClock.tick(FPS)
+if __name__ == "__main__":
+  ThisApp = App()
+  ThisApp.Run()
