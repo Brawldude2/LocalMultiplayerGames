@@ -102,24 +102,26 @@ box_constraints = [
 
 
 ox,oy = 20,220
+space = 1
+WIDTH,HEIGHT = 1600,900
 w,h = 6,6
 def copy_4_sides(incx,incy,ox,oy,_dir):
     Object("map_object",[ox+incx,oy+incy],_dir,"sandbox1",False,mass=50,constraints=box_constraints.copy(),shape={"shape":"rectangle","size":(34,30),"friction":0.01},ct=5)
-    Object("map_object",[ox+incx,800-oy-incy],_dir,"sandbox1",False,mass=50,constraints=box_constraints.copy(),shape={"shape":"rectangle","size":(34,30),"friction":0.01},ct=5)
-    Object("map_object",[1400-ox-incx,oy+incy],_dir,"sandbox1",False,mass=50,constraints=box_constraints.copy(),shape={"shape":"rectangle","size":(34,30),"friction":0.01},ct=5)
-    Object("map_object",[1400-ox-incx,800-oy-incy],_dir,"sandbox1",False,mass=50,constraints=box_constraints.copy(),shape={"shape":"rectangle","size":(34,30),"friction":0.01},ct=5)
+    Object("map_object",[ox+incx,HEIGHT-oy-incy],_dir,"sandbox1",False,mass=50,constraints=box_constraints.copy(),shape={"shape":"rectangle","size":(34,30),"friction":0.01},ct=5)
+    Object("map_object",[WIDTH-ox-incx,oy+incy],_dir,"sandbox1",False,mass=50,constraints=box_constraints.copy(),shape={"shape":"rectangle","size":(34,30),"friction":0.01},ct=5)
+    Object("map_object",[WIDTH-ox-incx,HEIGHT-oy-incy],_dir,"sandbox1",False,mass=50,constraints=box_constraints.copy(),shape={"shape":"rectangle","size":(34,30),"friction":0.01},ct=5)
 
 for i in range(w):
-    copy_4_sides(i*34,0,ox,oy,0)
+    copy_4_sides(i*(34+space),0,ox,oy,0)
 ox,oy = 216,9
 for i in range(h):
-    copy_4_sides(0,i*34,ox,oy,90)
+    copy_4_sides(0,i*(34+space),ox,oy,90)
 ox,oy = 536,9
 for i in range(h):
-    copy_4_sides(0,i*34,ox,oy,90)
+    copy_4_sides(0,i*(34+space),ox,oy,90)
 ox,oy = 564, 208
 for i in range(4):
-    copy_4_sides(i*34,0,ox,oy,0)
+    copy_4_sides(i*(34+space),0,ox,oy,0)
 
 Object("player",[  60, 60],0,"Tanks",False,mass=100,shape={"shape":"circle","radius":21},ID=1,ct=11)
 Object("player",[  60,740],0,"Tanks",False,mass=100,shape={"shape":"circle","radius":21},ID=2,ct=12)

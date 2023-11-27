@@ -62,7 +62,7 @@ class Loader:
             self.Game.TexturePacks[name] = t_list
 
     def load_background(self):
-        w,h = self.Game.display.get_size()
+        w,h = self.Game.WIDTH,self.Game.HEIGHT
         bg = pygame.Surface((w,h))
         bg_tile = self.Game.textures["background_tile"]
         tw,th = bg_tile.get_size()
@@ -92,22 +92,22 @@ class Loader:
         self.Game.StaticObjects = StaticObjects
 
     def create_boundries(self): #TODO: Use function
-        shape = pymunk.Segment(self.Game.space.static_body, (1, 1), (1, 480), 1.0)
+        shape = pymunk.Segment(self.Game.space.static_body, (1, 1), (1, self.Game.HEIGHT), 1.0)
         self.Game.space.add(shape)
         shape.elasticity = 1
         shape.friction = 1
 
-        shape = pymunk.Segment(self.Game.space.static_body, (640, 1), (640, 480), 1.0)
+        shape = pymunk.Segment(self.Game.space.static_body, (self.Game.WIDTH, 1), (self.Game.WIDTH, self.Game.HEIGHT), 1.0)
         self.Game.space.add(shape)
         shape.elasticity = 1
         shape.friction = 1
 
-        shape = pymunk.Segment(self.Game.space.static_body, (1, 1), (640, 1), 1.0)
+        shape = pymunk.Segment(self.Game.space.static_body, (1, 1), (self.Game.WIDTH, 1), 1.0)
         self.Game.space.add(shape)
         shape.elasticity = 1
         shape.friction = 1
 
-        shape = pymunk.Segment(self.Game.space.static_body, (1, 480), (640, 480), 1.0)
+        shape = pymunk.Segment(self.Game.space.static_body, (1, self.Game.HEIGHT), (self.Game.WIDTH, self.Game.HEIGHT), 1.0)
         self.Game.space.add(shape)
         shape.elasticity = 1
         shape.friction = 1

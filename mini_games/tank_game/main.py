@@ -63,13 +63,13 @@ class MapEditor:
         self.place_object(pos,_dir)
 
 class Game():
-    def __init__(self,player_count,map_filename,map_name,display):
+    def __init__(self,App,player_count,map_filename,map_name):
         self.frame = 0
         self.player_count = player_count
-        self.display = display
-        self.raw_display = pygame.Surface(display.get_size())
-        self.WIDTH = self.raw_display.get_width()
-        self.HEIGHT = self.raw_display.get_height()
+        self.display = App.screen
+        self.WIDTH = App.WIDTH
+        self.HEIGHT = App.HEIGHT 
+        self.raw_display = pygame.Surface((self.WIDTH,self.HEIGHT))
 
         self.space = pymunk.Space()
         self.space.sleep_time_threshold = 1

@@ -17,14 +17,14 @@ class App:
     self.FPS = 60
     self.BG_COLOR = (40,40,40)
     self.TITLE = "234 player games"
-    self.WIDTH, self.HEIGHT = 1400,800
-    self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT),RESIZABLE)
+    self.WIDTH, self.HEIGHT = 1600,900
+    self.screen = pygame.display.set_mode((1280,720),RESIZABLE)
     self.frame = 0
     self.running = True
     self.inputs = None
     pygame.display.set_caption(self.TITLE)
     self.input_mask = load_input_mask("Q_Keyboard",6)
-    self.tank_game = get_minigame(1,2,"assets/maps.json","desert1",self.screen)
+    self.tank_game = get_minigame(1,self,2,"assets/maps.json","desert1")
 
   def extract_inputs(self,pressed):
     input_list = []
@@ -45,8 +45,10 @@ class App:
   def HandleEvents(self):
     for event in pygame.event.get():
       if event.type == QUIT:
-        pygame.quit()
-        sys.exit()
+        self.Kill()
+      if event.type == KEYDOWN:
+        if event.key == K_ESCAPE:
+          self.Kill()
       if event.type == "No":
         if event.key == K_a:
           self.tank_game.editor.place_object(pygame.mouse.get_pos())
@@ -54,7 +56,9 @@ class App:
           self.tank_game.editor.release()
         if event.key == K_r:
           self.tank_game.editor.rotate(45)
-
+  def Kill(self):
+    pygame.quit()
+    sys.exit()
   def Run(self):
     # Game loop.
     while self.running:
